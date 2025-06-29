@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: sales-prediction-docker
+    env: docker
+    plan: free
+    dockerfilePath: Sales_Prediction_Based_on_Advertisement_on_different_platform/Dockerfile
+    repo: https://github.com/arpitmishra447/Projects.git
