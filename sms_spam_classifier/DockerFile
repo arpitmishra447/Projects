@@ -1,24 +1,31 @@
-# Use official Python image (Python 3.10 is compatible with your packages)
+# ✅ Force Python 3.10 (not latest)
 FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy project files to the container
+# Copy project files
 COPY . .
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y build-essential
+# Install system packages for building Python packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
+    gcc \
+    g++ \
+    --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip and build tools
+RUN pip install --upgrade pip setuptools wheel
 
 # Install Python dependencies
-RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Download NLTK data
+# Download NLTK data at build time
 RUN python -m nltk.downloader stopwords wordnet
 
-# Expose the port for Render to detect
+# Expose the correct port
 EXPOSE 10000
 
-# Run the app using Gunicorn
+# Start the app
 CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
