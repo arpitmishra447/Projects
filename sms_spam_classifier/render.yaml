@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: sms-spam-classifier
-    env: docker
-    dockerfilePath: ./Dockerfile
-    plan: free # or your selected Render plan
-    envVars:
-      - key: PORT
-        value: 10000

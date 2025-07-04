@@ -1,31 +1,27 @@
-# ✅ Force Python 3.10 (not latest)
 FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gfortran \
+    libatlas-base-dev \
+    liblapack-dev \
+    libblas-dev \
+    python3-dev \
+    && apt-get clean
+
 # Copy project files
 COPY . .
 
-# Install system packages for building Python packages
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3-dev \
-    gcc \
-    g++ \
-    --no-install-recommends && rm -rf /var/lib/apt/lists/*
-
-# Upgrade pip and build tools
-RUN pip install --upgrade pip setuptools wheel
-
 # Install Python dependencies
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Download NLTK data at build time
-RUN python -m nltk.downloader stopwords wordnet
+RUN python -m nltk.downloader stopwords wordnet punkt
 
-# Expose the correct port
-EXPOSE 10000
-
-# Start the app
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
+# Command to run your app
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000"]
