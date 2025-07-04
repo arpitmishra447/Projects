@@ -1,21 +1,21 @@
-# Use Python 3.10 slim base image
+# Use official Python image
 FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system build tools required for packages like pandas
-RUN apt-get update && apt-get install -y build-essential
-
-# Copy all files into the container
+# Copy all files to the container
 COPY . .
 
-# Upgrade pip and install all Python packages
-RUN pip install --upgrade pip setuptools wheel
+# Install system dependencies
+RUN apt-get update && apt-get install -y build-essential
+
+# Install Python dependencies
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose the port used by Gunicorn
-EXPOSE 5000
+# Expose the port used by gunicorn
+EXPOSE 10000
 
-# Start the Flask app using Gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
+# Command to run the app
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
