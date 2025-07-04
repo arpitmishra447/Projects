@@ -2,11 +2,8 @@ services:
   - type: web
     name: sms-spam-classifier
     env: docker
-    plan: free
-    dockerfilePath: Dockerfile
+    dockerfilePath: ./Dockerfile
+    plan: free # or your selected Render plan
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.13
-    ports:
-      - port: 10000
-        protocol: http
+      - key: PORT
+        value: 10000
